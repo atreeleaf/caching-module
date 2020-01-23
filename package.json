@@ -1,0 +1,24 @@
+{
+  "name": "caching-layer",
+  "version": "1.0.0",
+  "description": "npm pkg to cache duplicate requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node /build/index",
+    "build": "tsc",
+    "format": "eslint **/*.ts",
+    "lint": "eslint --fix **.*.ts"
+  },
+  "author": "Andrew Tang",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/config": "0.0.36",
+    "@types/md5": "^2.1.33",
+    "@types/redis": "^2.8.14",
+    "config": "^3.2.5"
+  },
+  "dependencies": {
+    "md5": "^2.2.1"
+  }
+}
