@@ -1,25 +1,26 @@
-process.env.NODE_CONFIG_DIR = '../config'
-import { IConfig } from "config"
-import * as config from "config"
-import md5 from 'md5'
-const CRC32 = ():string => '1616297f' // sample hash func
-const FNV1A = ():string => 'faf1eafe'
+import md5 from 'md5';
+const CRC32 = (): string => '1616297f'; // sample hash func
+const FNV1A = (): string => 'faf1eafe';
+import { HashStrategiesEnum } from '../hashEnum';
 
-
-
-const hashFuncFactory = (config: IConfig) :Function => {
-    let hashStrategy : Function;
-    switch(config.get('hashStrategy')) {
-        case "CRC32":
-            hashStrategy = CRC32
+/**
+ * Takes in a string of desired hash strategy and outputs the correct corresponding hash function
+ * @enum hashStrategy {HashStrategies}
+ * @returns newHashStrategy {Function}
+ */
+const hashFuncFactory = (hashStrategy: HashStrategiesEnum): Function => {
+    let desiredHashFunction: Function;
+    switch (hashStrategy) {
+        case 'CRC32':
+            desiredHashFunction = CRC32;
             break;
-        case "FNV1A":
-            hashStrategy = FNV1A
+        case 'FNV1A':
+            desiredHashFunction = FNV1A;
             break;
         default:
-            hashStrategy = md5
+            desiredHashFunction = md5;
     }
-    return hashStrategy
-}
+    return desiredHashFunction;
+};
 
-export default hashFuncFactory
+export default hashFuncFactory;

@@ -1,5 +1,3 @@
-import CachingService from './services/caching.service'
+import CachingService from './services/caching.service';
 
-
-
-export default CachingService
+export default CachingService;
