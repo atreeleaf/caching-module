@@ -8,7 +8,7 @@ import { HashStrategiesEnum } from '../hashEnum';
 
 class CachingService {
     /**
-     * The datastore instance caching service will use
+     * The data store instance caching service will use
      */
     db: RedisClient;
     /**
@@ -17,11 +17,11 @@ class CachingService {
     generateHash: Function;
     /**
      *
-     * @param db {Redis Client} Supported datastores
+     * @param db {Redis Client} Supported data stores
      * @param hashStrategy {HashStrategiesEnum} Supported Hash Strategies
      * @param options {any} options for caching & connection
      */
-    constructor(db: RedisClient, hashStrategy: HashStrategiesEnum, options: any) {
+    constructor(db: RedisClient, hashStrategy: HashStrategiesEnum) {
         this.db = db;
         this.generateHash = hashFuncFactory(hashStrategy);
     }
