@@ -4,13 +4,14 @@ const FNV1A = (): string => 'faf1eafe';
 import { HashStrategiesEnum } from '../hashEnum';
 
 /**
- * Takes in a string of desired hash strategy and outputs the correct corresponding hash function
+ * Takes in a string of desired hash strategy and outputs the correct corresponding hash function, or uses custom hash function injected by user.
  * @param hashStrategy string {HashStrategiesEnum} | {function<custom hash func>>}
  * @returns newHashStrategy {Function}
  */
 const hashFuncFactory = (hashStrategy: HashStrategiesEnum | Function): Function => {
     let desiredHashFunction: Function;
     if (typeof hashStrategy !== 'function') {
+        // if hashStrategy is a function, then we can just use it directly
         switch (hashStrategy) {
             case 'CRC32':
                 desiredHashFunction = CRC32;

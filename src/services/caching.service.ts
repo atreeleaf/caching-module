@@ -5,7 +5,6 @@ import { HashStrategiesEnum } from '../hashEnum';
 /**
  * Service to cache events
  */
-
 class CachingService {
     /**
      * The data store instance caching service will use
@@ -18,8 +17,7 @@ class CachingService {
     /**
      *
      * @param db {Redis Client} Supported data stores
-     * @param hashStrategy {HashStrategiesEnum} Supported Hash Strategies
-     * @param options {any} options for caching & connection
+     * @param hashStrategy {HashStrategiesEnum} Supported Hash Strategies | {function} custom hash function
      */
     constructor(db: RedisClient, hashStrategy: HashStrategiesEnum) {
         this.db = db;
