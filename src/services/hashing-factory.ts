@@ -10,7 +10,7 @@ import { HashStrategiesEnum } from '../hashEnum';
  */
 const hashFuncFactory = (hashStrategy: HashStrategiesEnum | Function): Function => {
     let desiredHashFunction: Function;
-    if (typeof hashStrategy !== 'function') {
+    if (typeof hashStrategy === 'string') {
         // if hashStrategy is a function, then we can just use it directly
         switch (hashStrategy) {
             case 'CRC32':
@@ -19,11 +19,16 @@ const hashFuncFactory = (hashStrategy: HashStrategiesEnum | Function): Function 
             case 'FNV1A':
                 desiredHashFunction = FNV1A;
                 break;
-            default:
+            case 'MD5':
                 desiredHashFunction = md5;
+                break;
+            default:
+                throw new Error(`${hashStrategy} is not a supported hashStrategy.`);
         }
-    } else {
+    } else if (typeof hashStrategy === 'function') {
         desiredHashFunction = hashStrategy;
+    } else {
+        throw new Error('Please input a supported hash strategy or custom hash function.');
     }
     return desiredHashFunction;
 };
