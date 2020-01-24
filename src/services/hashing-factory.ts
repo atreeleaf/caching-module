@@ -5,20 +5,24 @@ import { HashStrategiesEnum } from '../hashEnum';
 
 /**
  * Takes in a string of desired hash strategy and outputs the correct corresponding hash function
- * @enum hashStrategy {HashStrategies}
+ * @param hashStrategy string {HashStrategiesEnum} | {function<custom hash func>>}
  * @returns newHashStrategy {Function}
  */
-const hashFuncFactory = (hashStrategy: HashStrategiesEnum): Function => {
+const hashFuncFactory = (hashStrategy: HashStrategiesEnum | Function): Function => {
     let desiredHashFunction: Function;
-    switch (hashStrategy) {
-        case 'CRC32':
-            desiredHashFunction = CRC32;
-            break;
-        case 'FNV1A':
-            desiredHashFunction = FNV1A;
-            break;
-        default:
-            desiredHashFunction = md5;
+    if (typeof hashStrategy !== 'function') {
+        switch (hashStrategy) {
+            case 'CRC32':
+                desiredHashFunction = CRC32;
+                break;
+            case 'FNV1A':
+                desiredHashFunction = FNV1A;
+                break;
+            default:
+                desiredHashFunction = md5;
+        }
+    } else {
+        desiredHashFunction = hashStrategy;
     }
     return desiredHashFunction;
 };
