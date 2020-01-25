@@ -1,7 +1,6 @@
 import { RedisClient } from 'redis';
 import hashFuncFactory from './hashing-factory';
-import { HashStrategiesEnum } from '../hashEnum';
-
+import { HashStrategies } from './hashing-factory';
 /**
  * Service to cache events
  */
@@ -19,7 +18,7 @@ class CachingService {
      * @param db {Redis Client} Supported data stores
      * @param hashStrategy {HashStrategiesEnum} Supported Hash Strategies | {function} custom hash function
      */
-    constructor(db: RedisClient, hashStrategy: HashStrategiesEnum) {
+    constructor(db: RedisClient, hashStrategy: HashStrategies) {
         this.db = db;
         this.generateHash = hashFuncFactory(hashStrategy);
     }
