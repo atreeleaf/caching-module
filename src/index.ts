@@ -1,16 +1,31 @@
 import CachingService from './services/caching.service';
-import redis from 'redis';
+import redis, { RedisClient } from 'redis';
 
-const client = redis.createClient();
+let client: RedisClient;
 
-const mockCachingService = new CachingService(client, 'SHA256');
+async function initDB() {
+    client = await redis.createClient();
+    return new Promise((resolve, reject) => {
+        client.on('error', err => {
+            console.log('error connecting to redis');
+            reject(err);
+        });
+        client.on('connect', () => {
+            console.log('connected');
+            resolve();
+        });
+    });
+}
 
-const hash = mockCachingService.generateHash('hello');
+async function testCache(): Promise<void> {
+    await initDB();
+    const mockCachingService = new CachingService(client, 'SHA256');
+    const hash = mockCachingService.generateHash('hello').toString();
+    const writeCache = await mockCachingService.writeCache(hash, 'hello');
+    const result = await mockCachingService.readCache(hash);
+    console.log(result);
+}
 
-console.log(hash);
-
-const writeCache = await mockCachingService.writeCache(hash, 'hello');
-const result = await mockCachingService.readCache(hash);
-console.log(result);
+testCache();
 
 export default CachingService;
