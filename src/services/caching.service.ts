@@ -1,6 +1,8 @@
 import { RedisClient } from 'redis';
 import hashFuncFactory from './hashing-factory';
 import { HashStrategies } from './hashing-factory';
+import bluebird from 'bluebird';
+
 /**
  * Service to cache events
  */
@@ -20,6 +22,8 @@ class CachingService {
      */
     constructor(db: RedisClient, hashStrategy: HashStrategies | Function) {
         this.db = db;
+        // allow promises & async await syntax when using redis
+        bluebird.promisifyAll(RedisClient.prototype);
         if (typeof hashStrategy === 'function') {
             // Caching service instantiated with custom hash function
             this.generateHash = hashStrategy;
@@ -31,17 +35,36 @@ class CachingService {
     /**
      * Function that reads from cache
      * @param key {string} - key to search for in cache
+     * @return Promise<Error | any>
      */
-    readCache(key: string): Error | any {
-        return new Error('unable to read from cache');
+    async readCache(key: string): Promise<unknown> {
+        const db = this.db;
+        return db.get(key, (err, reply) => {
+            return new Promise((resolve, reject) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(reply);
+                }
+            });
+        });
     }
     /**
      * Function that writes to cache
      * @param key {string} key to write to
      * @param value  {string} value at specified key
      */
-    writeCache(key: string, value: any): Error | any {
-        return new Error('unable to write to cache');
+    async writeCache(key: string, value: any): Promise<unknown> {
+        const db = this.db;
+        return db.set(key, value, (err, reply) => {
+            return new Promise((resolve, reject) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(reply);
+                }
+            });
+        });
     }
 }
 
