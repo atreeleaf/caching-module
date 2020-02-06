@@ -18,9 +18,15 @@ class CachingService {
      * @param db {Redis Client} Supported data stores
      * @param hashStrategy {HashStrategiesEnum} Supported Hash Strategies | {function} custom hash function
      */
-    constructor(db: RedisClient, hashStrategy: HashStrategies) {
+    constructor(db: RedisClient, hashStrategy: HashStrategies | Function) {
         this.db = db;
-        this.generateHash = hashFuncFactory(hashStrategy);
+        if (typeof hashStrategy === 'function') {
+            // Caching service instantiated with custom hash function
+            this.generateHash = hashStrategy;
+        } else {
+            // Generate one of our supported hash functions.
+            this.generateHash = hashFuncFactory(hashStrategy);
+        }
     }
     /**
      * Function that reads from cache

@@ -2,14 +2,17 @@ import { HashStrategiesEnum } from '../hashEnum';
 import { SHA1, SHA256, MD5 } from 'crypto-js';
 
 /**
+ * Supported Hash Strategies
+ */
+export type HashStrategies = keyof typeof HashStrategiesEnum;
+
+/**
  * Takes in a string of desired hash strategy and outputs the correct corresponding hash function, or uses custom hash function injected by user.
  * @param hashStrategy string {HashStrategiesEnum} | {function<custom hash func>>}
  * @returns newHashStrategy {Function}
  */
 
-export type HashStrategies = keyof typeof HashStrategiesEnum;
-
-const hashFuncFactory = (hashStrategy: HashStrategies | Function): Function => {
+const hashFuncFactory = (hashStrategy: HashStrategies): Function => {
     let desiredHashFunction: Function;
     switch (hashStrategy) {
         case 'SHA1':
