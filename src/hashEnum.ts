@@ -2,7 +2,7 @@
  * All supported hash strategies
  */
 export enum HashStrategiesEnum {
-    CRC32,
-    FNV1A,
+    SHA1,
+    SHA256,
     MD5,
 }
