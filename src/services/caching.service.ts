@@ -39,8 +39,8 @@ class CachingService {
      */
     async readCache(key: string): Promise<unknown> {
         const db = this.db;
-        return db.get(key, (err, reply) => {
-            return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
+            db.get(key, (err, reply) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -56,8 +56,8 @@ class CachingService {
      */
     async writeCache(key: string, value: any): Promise<unknown> {
         const db = this.db;
-        return db.set(key, value, (err, reply) => {
-            return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
+            db.set(key, value, (err, reply) => {
                 if (err) {
                     reject(err);
                 } else {

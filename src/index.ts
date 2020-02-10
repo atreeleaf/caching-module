@@ -20,9 +20,9 @@ async function initDB() {
 async function testCache(): Promise<void> {
     await initDB();
     const mockCachingService = new CachingService(client, 'SHA256');
-    const hash = mockCachingService.generateHash('hello').toString();
-    const writeCache = await mockCachingService.writeCache(hash, 'hello');
-    const result = await mockCachingService.readCache(hash);
+    // const hash = mockCachingService.generateHash('hello').toString();
+    // const writeCache = await mockCachingService.writeCache('hi', 'Testing');
+    const result = await mockCachingService.readCache('hi');
     console.log(result);
 }
 
