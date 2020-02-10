@@ -1,7 +1,6 @@
 import { RedisClient } from 'redis';
 import hashFuncFactory from './hashing-factory';
 import { HashStrategies } from './hashing-factory';
-import bluebird from 'bluebird';
 
 /**
  * Service to cache events
@@ -23,7 +22,6 @@ class CachingService {
     constructor(db: RedisClient, hashStrategy: HashStrategies | Function) {
         this.db = db;
         // allow promises & async await syntax when using redis
-        bluebird.promisifyAll(RedisClient.prototype);
         if (typeof hashStrategy === 'function') {
             // Caching service instantiated with custom hash function
             this.generateHash = hashStrategy;
@@ -37,9 +35,10 @@ class CachingService {
      * @param key {string} - key to search for in cache
      * @return Promise<Error | any>
      */
-    async readCache(key: string): Promise<unknown> {
+    async get(key: string): Promise<unknown> {
         const db = this.db;
         return new Promise((resolve, reject) => {
+            // changes to data store library / implementation will result in code changes within this promise.
             db.get(key, (err, reply) => {
                 if (err) {
                     reject(err);
@@ -47,16 +46,18 @@ class CachingService {
                     resolve(reply);
                 }
             });
+            // User of this module will not have to change anything. We can abstract away details
         });
     }
     /**
      * Function that writes to cache
      * @param key {string} key to write to
-     * @param value  {string} value at specified key
+     * @param value {string} value at specified key
      */
-    async writeCache(key: string, value: any): Promise<unknown> {
+    async set(key: string, value: any): Promise<unknown> {
         const db = this.db;
         return new Promise((resolve, reject) => {
+            // changes to data store library / implementation will result in code changes within this promise.
             db.set(key, value, (err, reply) => {
                 if (err) {
                     reject(err);
@@ -64,6 +65,22 @@ class CachingService {
                     resolve(reply);
                 }
             });
+            // User of this module will not have to change anything. We can abstract away details
+        });
+    }
+
+    async expire(key: string, timeInSeconds: number): Promise<unknown> {
+        return new Promise((resolve, reject) => {
+            const db = this.db;
+            // changes to data store library / implementation will result in code changes within this promise.
+            db.expire(key, timeInSeconds, (err, reply) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(reply);
+                }
+            });
+            // User of this module will not have to change anything. We can abstract away details
         });
     }
 }
